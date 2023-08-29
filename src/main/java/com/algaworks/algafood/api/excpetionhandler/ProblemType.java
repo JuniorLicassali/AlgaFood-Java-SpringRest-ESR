@@ -2,6 +2,7 @@ package com.algaworks.algafood.api.excpetionhandler;
 
 public enum ProblemType {
 
+	DADOS_INVALIDOS("/dados-invalidos", "Dados Inválidos"),
 	ERRO_DE_SISTEMA("/erro-de-sistema", "Erro de sistema"),
 	PARAMETRO_INVALIDO("/parametro-invalido", "Parâmetro inválido"),
 	MENSAGEM_INCOMPREENSIVEL("/mensagem-incompreensivel", "Mensagem incompreensível"),

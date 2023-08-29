@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.excpetionhandler;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -15,6 +16,31 @@ public class Problem {
 	
 	private String userMessage;
 	private LocalDateTime timeStamp;
+	private List<Field> fields;
+	
+	public static class Field {
+		private String name;
+		private String userMessage;
+		
+		public Field() {
+		}
+		
+		public String getName() {
+			return name;
+		}
+		
+		public void setName(String name) {
+			this.name = name;
+		}
+		
+		public String getUserMessage() {
+			return userMessage;
+		}
+		
+		public void setUserMessage(String userMessage) {
+			this.userMessage = userMessage;
+		}
+	}
 	
 	public Problem() {
 	} 
@@ -58,6 +84,14 @@ public class Problem {
 
 	public void setTimeStamp(LocalDateTime timeStamp) {
 		this.timeStamp = timeStamp;
+	}
+
+	public List<Field> getFields() {
+		return fields;
+	}
+
+	public void setFields(List<Field> fields) {
+		this.fields = fields;
 	}
 
 	
