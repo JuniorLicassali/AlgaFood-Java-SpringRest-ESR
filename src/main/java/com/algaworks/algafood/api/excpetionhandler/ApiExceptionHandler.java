@@ -6,11 +6,15 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -19,6 +23,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.algaworks.algafood.core.validation.ValidacaoException;
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.exception.NegocioException;
@@ -33,25 +38,19 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	= "Ocorreu um erro interno inesperado no sistema. Tente novamente e se "
 			+ "o problema persistir, entre em contato com o administrador do sistema.";
 	
+	@Autowired
+	private MessageSource messageSource;
+	
+	@ExceptionHandler({ValidacaoException.class})
+	public ResponseEntity<Object> handleValidacaoException(ValidacaoException ex, WebRequest request){
+		return handleValidationInternal(ex, ex.getBindingResult(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+	}
+	
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
 			HttpHeaders headers, HttpStatus status, WebRequest request) {
 		
-		ProblemType problemType = ProblemType.DADOS_INVALIDOS;
-		String detail = "Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente.";
-		BindingResult bindingResult = ex.getBindingResult();
-		List<Problem.Field> problemFields = bindingResult.getFieldErrors().stream()
-				.map(fieldError -> {Problem.Field field = new Problem.Field();
-				field.setUserMessage(fieldError.getDefaultMessage());
-		        field.setName(fieldError.getField());
-		        return field;}
-				).collect(Collectors.toList());
-		
-		Problem problem = createProblemBuilder(status, problemType, detail);
-		problem.setFields(problemFields);
-		
-		
-		return handleExceptionInternal(ex, problem, headers, status, request);
+		return handleValidationInternal(ex, ex.getBindingResult(), headers, status, request);
 	}
 	
 	@ExceptionHandler(Exception.class)
@@ -215,12 +214,40 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		problem.setTitle(problemType.getTitle());
 		problem.setDetail(detail);
 		problem.setUserMessage(detail);
-		problem.setFields(null);
+		problem.setObjects(null);
 		return problem;
 
 	}
 
 	private String joinPath(List<Reference> references) {
 		return references.stream().map(ref -> ref.getFieldName()).collect(Collectors.joining("."));
+	}
+	
+	private ResponseEntity<Object> handleValidationInternal(Exception ex, BindingResult bindingResult, HttpHeaders headers,
+			HttpStatus status, WebRequest request) {
+		
+		ProblemType problemType = ProblemType.DADOS_INVALIDOS;
+		String detail = "Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente.";
+		
+		List<Problem.Object> problemObjects = bindingResult.getAllErrors().stream()
+				.map(objectError -> { 
+					String message = messageSource.getMessage(objectError, LocaleContextHolder.getLocale());
+					String name = objectError.getObjectName();
+					
+					if (objectError instanceof FieldError) {
+						name = ((FieldError) objectError).getField();
+					}
+					
+	                Problem.Object object = new Problem.Object();
+	                object.setName(name);
+	                object.setUserMessage(message);
+	                return object;}
+				).collect(Collectors.toList());
+		
+		Problem problem = createProblemBuilder(status, problemType, detail);
+		problem.setObjects(problemObjects);
+		
+		
+		return handleExceptionInternal(ex, problem, headers, status, request);
 	}
 }

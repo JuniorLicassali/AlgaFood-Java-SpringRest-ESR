@@ -16,13 +16,13 @@ public class Problem {
 	
 	private String userMessage;
 	private LocalDateTime timeStamp;
-	private List<Field> fields;
+	private List<Object> objects;
 	
-	public static class Field {
+	public static class Object {
 		private String name;
 		private String userMessage;
 		
-		public Field() {
+		public Object() {
 		}
 		
 		public String getName() {
@@ -86,14 +86,11 @@ public class Problem {
 		this.timeStamp = timeStamp;
 	}
 
-	public List<Field> getFields() {
-		return fields;
+	public List<Object> getObjects() {
+		return objects;
 	}
 
-	public void setFields(List<Field> fields) {
-		this.fields = fields;
+	public void setObjects(List<Object> objects) {
+		this.objects = objects;
 	}
-
-	
-	
 }
