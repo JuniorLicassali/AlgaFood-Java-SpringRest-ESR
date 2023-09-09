@@ -51,7 +51,7 @@ public class CasdastroCozinhaIT {
 		RestAssured.port = port;
 		RestAssured.basePath = "/cozinhas";
 		
-		jsonCorretoCozinhaChinesa = ResourceUtils.getContentFromResource("/json/cozinha-chinesa.json");
+		jsonCorretoCozinhaChinesa = ResourceUtils.getContentFromResource("/json/correto/cozinha-chinesa.json");
 		
 		databaseCleaner.clearTables();
 		prepararDados();

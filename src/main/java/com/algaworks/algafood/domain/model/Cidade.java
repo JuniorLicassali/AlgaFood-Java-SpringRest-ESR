@@ -17,12 +17,9 @@ import javax.validation.groups.Default;
 
 import com.algaworks.algafood.core.validation.Groups;
 
-import lombok.EqualsAndHashCode;
-
 @Entity
 public class Cidade {
 
-	@EqualsAndHashCode.Include
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
