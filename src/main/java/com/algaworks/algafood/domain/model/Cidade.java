@@ -34,6 +34,11 @@ public class Cidade {
 	@ManyToOne
 	@JoinColumn(nullable = false)
 	private Estado estado;
+	 
+	
+
+	public Cidade() {
+	}
 
 	public Long getId() {
 		return id;

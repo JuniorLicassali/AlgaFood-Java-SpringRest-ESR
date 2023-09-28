@@ -1,6 +1,7 @@
 package com.algaworks.algafood;
 
-import static org.hamcrest.CoreMatchers.equalTo;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
 
 import java.math.BigDecimal;
 
@@ -78,9 +79,7 @@ public class CadastroRestauranteIT {
 	
 	@Test
 	public void deveRetornarStatus200_QuandoConsultarRestaurantes() {
-		
-		RestAssured
-		.given()
+		given()
 			.accept(ContentType.JSON)
 		.when()
 			.get()
@@ -90,8 +89,7 @@ public class CadastroRestauranteIT {
 	
 	@Test
 	public void deveRetornarStatus201_QuandoCadastrarRestaurante() {
-		RestAssured
-		.given()
+		given()
 			.body(jsonRestauranteCorreto)
 			.contentType(ContentType.JSON)
 			.accept(ContentType.JSON)
@@ -103,8 +101,7 @@ public class CadastroRestauranteIT {
 	
 	@Test
 	public void deveRetornarStatus400_QuandoCadastrarRestauranteSemTaxaFrete() {
-		RestAssured
-		.given()
+		given()
 			.body(jsonRestauranteSemFrete)
 			.contentType(ContentType.JSON)
 			.accept(ContentType.JSON)
@@ -117,8 +114,7 @@ public class CadastroRestauranteIT {
 
 	@Test
 	public void deveRetornarStatus400_QuandoCadastrarRestauranteSemCozinha() {
-		RestAssured
-		.given()
+		given()
 			.body(jsonRestauranteSemCozinha)
 			.contentType(ContentType.JSON)
 			.accept(ContentType.JSON)
@@ -131,8 +127,7 @@ public class CadastroRestauranteIT {
 	
 	@Test
 	public void deveRetornarStatus400_QuandoCadastrarRestauranteComCozinhaInexistente() {
-		RestAssured
-		.given()
+		given()
 			.body(jsonRestauranteComCozinhaInexistente)
 			.contentType(ContentType.JSON)
 			.accept(ContentType.JSON)
@@ -145,8 +140,7 @@ public class CadastroRestauranteIT {
 	
 	@Test
 	public void deveRetornarRespostaEStatusCorretos_QuandoConsultarRestauranteExistente() {
-		RestAssured
-		.given()
+		given()
 			.pathParam("restauranteId", burgerTopRestaurante.getId())
 			.accept(ContentType.JSON)
 		.when()
@@ -158,8 +152,7 @@ public class CadastroRestauranteIT {
 	
 	@Test
 	public void deveRetornarStatus404_QuandoConsultarRestauranteInexistente() {
-		RestAssured
-		.given()
+		given()
 			.pathParam("restauranteId", RESTAURANTE_ID_INEXISTENTE)
 			.accept(ContentType.JSON)
 		.when()

@@ -26,6 +26,9 @@ public class Estado {
 	@NotBlank
 	@Column(nullable = false)
 	private String nome;
+	
+	public Estado() {
+	}
 
 	public Long getId() {
 		return id;

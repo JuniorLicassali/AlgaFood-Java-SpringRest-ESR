@@ -18,10 +18,6 @@ public class FormaPagamento {
 	@Column(nullable = false)
 	private String descricao;
 
-	public FormaPagamento(Long id, String descricao) {
-		this.id = id;
-		this.descricao = descricao;
-	}
 
 	public Long getId() {
 		return id;

@@ -1,5 +1,4 @@
 package com.algaworks.algafood.util;
-
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -28,7 +27,7 @@ public class DatabaseCleaner {
 	public void clearTables() {
 		try (Connection connection = dataSource.getConnection()) {
 			this.connection = connection;
-
+			
 			checkTestDatabase();
 			tryToClearTables();
 		} catch (SQLException e) {
@@ -37,13 +36,13 @@ public class DatabaseCleaner {
 			this.connection = null;
 		}
 	}
-
+	
 	private void checkTestDatabase() throws SQLException {
 		String catalog = connection.getCatalog();
 
 		if (catalog == null || !catalog.endsWith("test")) {
-			throw new RuntimeException("Cannot clear database tables because '" + catalog
-					+ "' is not a test database (suffix 'test' not found).");
+			throw new RuntimeException(
+					"Cannot clear database tables because '" + catalog + "' is not a test database (suffix 'test' not found).");
 		}
 	}
 
@@ -98,5 +97,5 @@ public class DatabaseCleaner {
 		logger.debug("Adding SQL: {}", sql);
 		return sql;
 	}
-
+	
 }

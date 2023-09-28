@@ -3,7 +3,6 @@ package com.algaworks.algafood.domain.model;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,9 +15,15 @@ import javax.persistence.ManyToMany;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 public class Usuario {
 
+	@EqualsAndHashCode.Include
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -40,69 +45,21 @@ public class Usuario {
 	@JoinTable(name = "usuario_grupo", joinColumns = @JoinColumn(name = "usuario_id"),
 			inverseJoinColumns = @JoinColumn(name = "grupo_id"))
 	private List<Grupo> grupos = new ArrayList<>();
-
-	public Long getId() {
-		return id;
+	
+	public boolean senhaCoincideCom(String senha) {
+		return getSenha().equals(senha);
 	}
-
-	public void setId(Long id) {
-		this.id = id;
+	
+	public boolean senhaNaoCoincideCom(String senha) {
+		return !senhaCoincideCom(senha);
 	}
-
-	public String getNome() {
-		return nome;
+	
+	public boolean removerGrupo(Grupo grupo) {
+		return getGrupos().remove(grupo);
 	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
+	
+	public boolean adicionarGrupo(Grupo grupo) {
+		return getGrupos().add(grupo);
 	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getSenha() {
-		return senha;
-	}
-
-	public void setSenha(String senha) {
-		this.senha = senha;
-	}
-
-	public OffsetDateTime getDataCadastro() {
-		return dataCadastro;
-	}
-
-	public void setDataCadastro(OffsetDateTime dataCadastro) {
-		this.dataCadastro = dataCadastro;
-	}
-
-	public List<Grupo> getGrupos() {
-		return grupos;
-	}
-
-	public void setGrupos(List<Grupo> grupos) {
-		this.grupos = grupos;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Usuario other = (Usuario) obj;
-		return Objects.equals(id, other.id);
-	}
+	
 }
