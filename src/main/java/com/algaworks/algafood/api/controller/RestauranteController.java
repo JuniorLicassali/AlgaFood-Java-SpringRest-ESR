@@ -45,16 +45,11 @@ public class RestauranteController {
 	
 	@Autowired
 	private RestauranteInputDisassembler restauranteInputDisassembler;
-
+	
+	@JsonView(RestauranteView.Resumo.class)
 	@GetMapping
 	public List<RestauranteDTO> listar() {
 		return restauranteDTOAssembler.toCollectionDTO(restauranteRepository.findAll());
-	}
-	
-	@JsonView(RestauranteView.Resumo.class)
-	@GetMapping(params = "projecao=resumo")
-	public List<RestauranteDTO> listarResumido() {
-		return listar();
 	}
 	
 	@JsonView(RestauranteView.ApenasNome.class)
@@ -62,6 +57,28 @@ public class RestauranteController {
 	public List<RestauranteDTO> listarApenasNomes() {
 		return listar();
 	}
+	
+//	@JsonView(RestauranteView.Resumo.class)
+//	@GetMapping(params = "projecao=resumo")
+//	public List<RestauranteDTO> listarResumido() {
+//		return listar();
+//	}
+	
+//	@GetMapping
+//	public MappingJacksonValue listar(@RequestParam(required = false) String projecao) {
+//		List<Restaurante> restaurantes = restauranteRepository.findAll();
+//		List<RestauranteDTO> restaurantesDTO = restauranteDTOAssembler.toCollectionDTO(restaurantes);
+//		
+//		MappingJacksonValue restaurantesWrapper = new MappingJacksonValue(restaurantesDTO);
+//		
+//		if("apenas-nome".equals(projecao)) {
+//			restaurantesWrapper.setSerializationView(RestauranteView.ApenasNome.class);
+//		} else if ("completo".equals(projecao)) {
+//			restaurantesWrapper.setSerializationView(null);
+//		}
+//		
+//		return restaurantesWrapper;
+//	}
 
 	@GetMapping("/{restauranteId}")
 	public RestauranteDTO buscar(@PathVariable Long restauranteId) {
