@@ -1,7 +1,14 @@
 package com.algaworks.algafood.api.controller;
 
 import java.io.IOException;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+import java.io.InputStream;
+>>>>>>> 5bdcd5d38572432cf3d51843c6d6a0da50159394
 import java.util.List;
+>>>>>>> 6001a32eb4cbf62235d3aba2d18fb73a2fe767d4
 
 import javax.validation.Valid;
 

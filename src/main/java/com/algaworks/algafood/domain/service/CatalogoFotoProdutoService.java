@@ -38,16 +38,22 @@ public class CatalogoFotoProdutoService {
 		foto = produtoRepository.save(foto);
 		produtoRepository.flush();
 
+<<<<<<< HEAD
+		NovaFoto novaFoto = NovaFoto.builder().nomeArquivo(foto.getNomeArquivo()).inputStream(dadosArquivo).build();
+=======
 		NovaFoto novaFoto = NovaFoto.builder()
 				.nomeArquivo(foto.getNomeArquivo())
 				.ContentType(foto.getContentType())
 				.inputStream(dadosArquivo)
 				.build();
+>>>>>>> 6001a32eb4cbf62235d3aba2d18fb73a2fe767d4
 		
 		
 		fotoStorage.substituir(nomeArquivoExistente, novaFoto);
 		
 		return foto;
+<<<<<<< HEAD
+=======
 	}
 	
 	public FotoProduto buscarOuFalhar(Long restauranteId, Long produtoId) {
@@ -63,5 +69,6 @@ public class CatalogoFotoProdutoService {
 		produtoRepository.flush();
 		
 		fotoStorage.remover(foto.getNomeArquivo());
+>>>>>>> 6001a32eb4cbf62235d3aba2d18fb73a2fe767d4
 	}
 }
