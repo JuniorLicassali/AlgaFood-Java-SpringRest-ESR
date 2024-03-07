@@ -18,6 +18,7 @@ public class RestauranteDTO {
 	
 	@JsonView(RestauranteView.Resumo.class)
 	private CozinhaDTO cozinha;
+	
 	private Boolean ativo;
 	private Boolean aberto;
 	private EnderecoDTO endereco;

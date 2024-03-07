@@ -4,30 +4,20 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import com.algaworks.algafood.api.dto.EstadoDTO;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class CidadeInput {
 
+	@ApiModelProperty(example = "Uberlandia", required = true)
 	@NotBlank
 	private String nome;
 	
 	@Valid
 	@NotNull
-	private EstadoDTO estado;
+	private EstadoIdInput estado;
 
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public EstadoDTO getEstado() {
-		return estado;
-	}
-
-	public void setEstado(EstadoDTO estado) {
-		this.estado = estado;
-	}
 }
