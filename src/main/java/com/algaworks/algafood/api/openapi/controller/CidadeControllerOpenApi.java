@@ -1,6 +1,6 @@
 package com.algaworks.algafood.api.openapi.controller;
 
-import java.util.List;
+import org.springframework.hateoas.CollectionModel;
 
 import com.algaworks.algafood.api.dto.CidadeDTO;
 import com.algaworks.algafood.api.dto.input.CidadeInput;
@@ -15,7 +15,7 @@ import io.swagger.annotations.ApiResponses;
 public interface CidadeControllerOpenApi {
 
 	@ApiOperation("Lista as cidades")
-	public List<CidadeDTO> listar();
+	public CollectionModel<CidadeDTO> listar();
 
 	@ApiOperation("Busca uma cidade por ID")
 	@ApiResponses({@ApiResponse(code = 400, message = "ID da cidade inválido", response = Problem.class), @ApiResponse(code = 404, message = "Cidade não encontrada", response = Problem.class)})

@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -43,15 +44,17 @@ public class EstadoController implements EstadoControllerOpenApi {
 	private EstadoInputDisassembler estadoInputDisassembler;
 
 	@GetMapping
-	public List<EstadoDTO> listar() {
+	public CollectionModel<EstadoDTO> listar() {
 		
-		return estadoDTOAssembler.toCollectionDTO(estadoRepository.findAll());
+		List<Estado> estadoDTO = estadoRepository.findAll();
+ 		
+		return estadoDTOAssembler.toCollectionModel(estadoDTO);
 	}
 
 	@GetMapping("/{estadoId}")
 	public EstadoDTO buscar(@PathVariable Long estadoId) {
 	
-		return estadoDTOAssembler.toDTO(cadastroEstado.buscarOuFalhar(estadoId));
+		return estadoDTOAssembler.toModel(cadastroEstado.buscarOuFalhar(estadoId));
 	}
 
 	@PostMapping
@@ -62,7 +65,7 @@ public class EstadoController implements EstadoControllerOpenApi {
 		
 		estado = cadastroEstado.salvar(estado);
 		
-		return estadoDTOAssembler.toDTO(estado);
+		return estadoDTOAssembler.toModel(estado);
 	}
 
 	@PutMapping("/{estadoId}")
@@ -73,7 +76,7 @@ public class EstadoController implements EstadoControllerOpenApi {
 		
 		estadoAtual = cadastroEstado.salvar(estadoAtual);
 
-		return  estadoDTOAssembler.toDTO(estadoAtual);
+		return  estadoDTOAssembler.toModel(estadoAtual);
 	}
 
 	@DeleteMapping("/{estadoId}")

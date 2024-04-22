@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.openapi.controller;
 
-import java.util.List;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.ResponseEntity;
 
 import com.algaworks.algafood.api.dto.PermissaoDTO;
 import com.algaworks.algafood.api.exceptionhandler.Problem;
@@ -18,7 +19,7 @@ public interface GrupoPermissaoControllerOpenApi {
 	@ApiResponses({
 		@ApiResponse(code = 400, message = "ID do grupo inválido", response = Problem.class), 
 		@ApiResponse(code = 404, message = "Grupo não encontrado", response = Problem.class)})
-	public List<PermissaoDTO> listar(@ApiParam(value = "ID do grupo", example = "1", required = true) Long grupoId);
+	public CollectionModel<PermissaoDTO> listar(@ApiParam(value = "ID do grupo", example = "1", required = true) Long grupoId);
 	
 	@ApiOperation("Associação de permissão com grupo")
 	@ApiResponses({
@@ -26,7 +27,7 @@ public interface GrupoPermissaoControllerOpenApi {
 		@ApiResponse(code = 404, message = "Grupo ou permissão não encontrada", 
 			response = Problem.class)
 	})
-	public void associar(@ApiParam(value = "ID do grupo", example = "1", required = true) Long grupoId, @ApiParam(value = "ID da permissão", example = "1", required = true) Long permissaoId);
+	public ResponseEntity<Void> associar(@ApiParam(value = "ID do grupo", example = "1", required = true) Long grupoId, @ApiParam(value = "ID da permissão", example = "1", required = true) Long permissaoId);
 	
 	@ApiOperation("Desassociação de permissão com grupo")
 	@ApiResponses({
@@ -34,7 +35,7 @@ public interface GrupoPermissaoControllerOpenApi {
 		@ApiResponse(code = 404, message = "Grupo ou permissão não encontrada", 
 			response = Problem.class)
 	})
-	public void desassociar(@ApiParam(value = "ID do grupo", example = "1", required = true) Long grupoId,
+	public ResponseEntity<Void> desassociar(@ApiParam(value = "ID do grupo", example = "1", required = true) Long grupoId,
 			@ApiParam(value = "ID da permissão", example = "1", required = true) Long permissaoId);
 	
 }

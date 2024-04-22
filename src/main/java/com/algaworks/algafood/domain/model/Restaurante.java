@@ -5,7 +5,6 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -23,9 +22,11 @@ import javax.persistence.OneToMany;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.algaworks.algafood.core.validation.ValorZeroIncluiDescricao;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-@ValorZeroIncluiDescricao(valorField = "taxaFrete", descricaoField = "nome", descricaoObrigatoria = "Frete Grátis")
+@Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 public class Restaurante {
 
@@ -89,6 +90,38 @@ public class Restaurante {
 		setAberto(false);
 	}
 	
+	public boolean isAberto() {
+		return this.aberto;
+	}
+	
+	public boolean isFechado() {
+		return !isAberto();
+	}
+	
+	public boolean isAtivo() {
+		return this.ativo;
+	}
+	
+	public boolean isInativo() {
+		return !isAtivo();
+	}
+	
+	public boolean aberturaPermitida() {
+		return isAtivo() && isFechado();
+	}
+	
+	public boolean ativacaoPermitida() {
+		return isInativo();
+	}
+	
+	public boolean inativacaoPermitida() {
+		return isAtivo();
+	}
+	
+	public boolean fechamentoPermitido() {
+		return isAberto();
+	}
+	
 	public boolean removerFormaPagamento(FormaPagamento formaPagamento) {
 		return getFormasPagamento().remove(formaPagamento);
 	}
@@ -112,120 +145,5 @@ public class Restaurante {
 	public boolean naoAceitaFormaPagamento(FormaPagamento formaPagamento) {
 		return !aceitaFormaPagamento(formaPagamento);
 	}
-	
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
-	}
-
-	public BigDecimal getTaxaFrete() {
-		return taxaFrete;
-	}
-
-	public void setTaxaFrete(BigDecimal taxaFrete) {
-		this.taxaFrete = taxaFrete;
-	}
-
-	public Cozinha getCozinha() {
-		return cozinha;
-	}
-
-	public void setCozinha(Cozinha cozinha) {
-		this.cozinha = cozinha;
-	}
-
-	public Endereco getEndereco() {
-		return endereco;
-	}
-
-	public void setEndereco(Endereco endereco) {
-		this.endereco = endereco;
-	}
-	public Boolean getAtivo() {
-		return ativo;
-	}
-
-	public void setAtivo(Boolean ativo) {
-		this.ativo = ativo;
-	}
-	
-	public Boolean getAberto() {
-		return aberto;
-	}
-
-	public void setAberto(Boolean aberto) {
-		this.aberto = aberto;
-	}
-	
-	public OffsetDateTime getDataCadastro() {
-		return dataCadastro;
-	}
-
-	public void setDataCadastro(OffsetDateTime dataCadastro) {
-		this.dataCadastro = dataCadastro;
-	}
-
-	public OffsetDateTime getDataAtualizacao() {
-		return dataAtualizacao;
-	}
-
-	public void setDataAtualizacao(OffsetDateTime dataAtualizacao) {
-		this.dataAtualizacao = dataAtualizacao;
-	}
-
-	public Set<FormaPagamento> getFormasPagamento() {
-		return formasPagamento;
-	}
-
-	public void setFormasPagamento(Set<FormaPagamento> formasPagamento) {
-		this.formasPagamento = formasPagamento;
-	}
-
-	public List<Produto> getProdutos() {
-		return produtos;
-	}
-
-	public void setProdutos(List<Produto> produtos) {
-		this.produtos = produtos;
-	}
-	
-	public Set<Usuario> getResponsaveis() {
-		return responsaveis;
-	}
-	
-	public void setResponsaveis(Set<Usuario> responsaveis) {
-		this.responsaveis = responsaveis;
-	}
-	
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Restaurante other = (Restaurante) obj;
-		return Objects.equals(id, other.id);
-	}
-
-	
 
 }

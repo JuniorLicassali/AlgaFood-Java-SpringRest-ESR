@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.algaworks.algafood.api.ResourceUriHelper;
 import com.algaworks.algafood.api.assembler.CidadeDTOAssembler;
 import com.algaworks.algafood.api.assembler.CidadeInputDisassembler;
 import com.algaworks.algafood.api.dto.CidadeDTO;
@@ -45,15 +47,16 @@ public class CidadeController implements CidadeControllerOpenApi {
 	private CidadeInputDisassembler cidadeInputDisassembler;
 
 	@GetMapping
-	public List<CidadeDTO> listar() {
+	public CollectionModel<CidadeDTO> listar() {
+		List<Cidade> todasCidades = cidadeRepository.findAll();
 		
-		return cidadeDTOAssembler.toCollectionDTO(cidadeRepository.findAll());
+		return cidadeDTOAssembler.toCollectionModel(todasCidades);
 	}
 
 	@GetMapping("/{cidadeId}")
 	public CidadeDTO buscar(@PathVariable Long cidadeId) {
 		
-		return cidadeDTOAssembler.toDTO(cadastroCidade.buscarCidadeOuFalhar(cidadeId));
+		return cidadeDTOAssembler.toModel(cadastroCidade.buscarCidadeOuFalhar(cidadeId));
 	}
 
 	@PostMapping
@@ -64,7 +67,11 @@ public class CidadeController implements CidadeControllerOpenApi {
 			
 			cidade = cadastroCidade.salvar(cidade);
 			
-			return cidadeDTOAssembler.toDTO(cidade);
+			CidadeDTO cidadeDTO = cidadeDTOAssembler.toModel(cidade);
+			
+			ResourceUriHelper.addUriInResponseHeader(cidadeDTO.getId());
+			
+			return cidadeDTO;
 		} catch (EstadoNaoEncontradoException e) {
 			throw new NegocioException(e.getMessage(), e);
 		}
@@ -79,7 +86,7 @@ public class CidadeController implements CidadeControllerOpenApi {
 			
 			cidadeAtual = cadastroCidade.salvar(cidadeAtual);
 
-			return cidadeDTOAssembler.toDTO(cidadeAtual);
+			return cidadeDTOAssembler.toModel(cidadeAtual);
 		} catch (EstadoNaoEncontradoException e) {
 			throw new NegocioException(e.getMessage(), e);
 		}

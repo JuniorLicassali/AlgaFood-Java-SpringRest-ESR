@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -43,17 +44,17 @@ public class GrupoController implements GrupoControllerOpenApi {
 	private GrupoInputDisassembler grupoInputDisassembler;
 	
 	@GetMapping
-	public List<GrupoDTO> listar() {
+	public CollectionModel<GrupoDTO> listar() {
 		List<Grupo> todosGrupos = grupoRepository.findAll();
 		
-		return grupoDTOAssembler.toCollectionDTO(todosGrupos);
+		return grupoDTOAssembler.toCollectionModel(todosGrupos);
 	}
 	
 	@GetMapping("/{grupoId}")
 	public GrupoDTO buscar(@PathVariable Long grupoId) {
 		Grupo grupo = grupoService.buscarOuFalhar(grupoId);
 		
-		return grupoDTOAssembler.toDTO(grupo);
+		return grupoDTOAssembler.toModel(grupo);
 	}
 	
 	@PostMapping
@@ -63,7 +64,7 @@ public class GrupoController implements GrupoControllerOpenApi {
 		Grupo grupo = grupoInputDisassembler.toDomainObject(grupoInput);
 		grupo = grupoService.salvar(grupo);
 		
-		return grupoDTOAssembler.toDTO(grupo);
+		return grupoDTOAssembler.toModel(grupo);
 	}
 	
 	@PutMapping("/{grupoId}")
@@ -73,7 +74,7 @@ public class GrupoController implements GrupoControllerOpenApi {
 		grupoInputDisassembler.copyToDomainObject(grupoInput, grupoAtual);
 		grupoAtual = grupoService.salvar(grupoAtual);
 		
-		return grupoDTOAssembler.toDTO(grupoAtual);
+		return grupoDTOAssembler.toModel(grupoAtual);
 	}
 	
 	@DeleteMapping("/{grupoId}")

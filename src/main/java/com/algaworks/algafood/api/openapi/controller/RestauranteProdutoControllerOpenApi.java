@@ -1,6 +1,6 @@
 package com.algaworks.algafood.api.openapi.controller;
 
-import java.util.List;
+import org.springframework.hateoas.CollectionModel;
 
 import com.algaworks.algafood.api.dto.ProdutoDTO;
 import com.algaworks.algafood.api.dto.input.ProdutoInput;
@@ -20,8 +20,8 @@ public interface RestauranteProdutoControllerOpenApi {
 		@ApiResponse(code = 400, message = "ID do restaurante inválido", response = Problem.class),
 		@ApiResponse(code = 404, message = "Restaurante não encontrado", response = Problem.class)
 	})
-	public List<ProdutoDTO> listar(@ApiParam(value = "ID do restaurante", example = "1", required = true) Long restauranteId, @ApiParam(value = "Indica se deve ou não incluir produtos inativos no resultado da listagem", 
-			example = "false", defaultValue = "false") boolean incluirInativos);
+	public CollectionModel<ProdutoDTO> listar(@ApiParam(value = "ID do restaurante", example = "1", required = true) Long restauranteId, @ApiParam(value = "Indica se deve ou não incluir produtos inativos no resultado da listagem", 
+			example = "false", defaultValue = "false") Boolean incluirInativos);
 	
 	@ApiOperation(value = "Busca um produto de um restaurante")
 	@ApiResponses({

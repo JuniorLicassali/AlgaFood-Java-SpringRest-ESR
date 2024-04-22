@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.openapi.controller;
 
-import java.util.List;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.ResponseEntity;
 
 import com.algaworks.algafood.api.dto.GrupoDTO;
 import com.algaworks.algafood.api.exceptionhandler.Problem;
@@ -18,7 +19,7 @@ public interface UsuarioGrupoControllerOpenApi {
 		@ApiResponse(code = 404, message = "Usuário não encontrado", response = Problem.class)
 	})
 	@ApiOperation("Lista os grupos associados a um usuário")
-	public List<GrupoDTO> listar(@ApiParam(value = "ID do usuário", example = "1", required = true) Long usuarioId);
+	public CollectionModel<GrupoDTO> listar(@ApiParam(value = "ID do usuário", example = "1", required = true) Long usuarioId);
 	
 	@ApiOperation("Associação de grupo com usuário")
 	@ApiResponses({
@@ -26,7 +27,7 @@ public interface UsuarioGrupoControllerOpenApi {
 		@ApiResponse(code = 404, message = "Usuário ou grupo não encontrado", 
 			response = Problem.class)
 	})
-	public void associar(@ApiParam(value = "ID do usuário", example = "1", required = true) Long usuarioId, @ApiParam(value = "ID do grupo", example = "1", required = true) Long grupoId);
+	public ResponseEntity<Void> associar(@ApiParam(value = "ID do usuário", example = "1", required = true) Long usuarioId, @ApiParam(value = "ID do grupo", example = "1", required = true) Long grupoId);
 	
 	@ApiOperation("Desassociação de grupo com usuário")
 	@ApiResponses({
@@ -34,6 +35,6 @@ public interface UsuarioGrupoControllerOpenApi {
 		@ApiResponse(code = 404, message = "Usuário ou grupo não encontrado", 
 			response = Problem.class)
 	})
-	public void desassociar(@ApiParam(value = "ID do usuário", example = "1", required = true) Long usuarioId, @ApiParam(value = "ID do grupo", example = "1", required = true) Long grupoId);
+	public ResponseEntity<Void> desassociar(@ApiParam(value = "ID do usuário", example = "1", required = true) Long usuarioId, @ApiParam(value = "ID do grupo", example = "1", required = true) Long grupoId);
 	
 }

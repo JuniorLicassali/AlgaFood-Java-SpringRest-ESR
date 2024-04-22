@@ -2,6 +2,9 @@ package com.algaworks.algafood.api.openapi.controller;
 
 import java.util.List;
 
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.ResponseEntity;
+
 import com.algaworks.algafood.api.dto.UsuarioDTO;
 import com.algaworks.algafood.api.exceptionhandler.Problem;
 
@@ -18,7 +21,7 @@ public interface RestauranteUsuarioResponsavelControllerOpenApi {
 	@ApiResponses({
 		@ApiResponse(code = 404, message = "Restaurante não encontrado", response = Problem.class)
 	})
-	public List<UsuarioDTO> listar(@ApiParam(value = "ID do restaurante", example = "1", required = true) Long restauranteId);
+	public CollectionModel<UsuarioDTO> listar(@ApiParam(value = "ID do restaurante", example = "1", required = true) Long restauranteId);
 	
 	@ApiOperation(value = "Associação de restaurante com usuário responsável")
 	@ApiResponses({
@@ -26,7 +29,7 @@ public interface RestauranteUsuarioResponsavelControllerOpenApi {
 		@ApiResponse(code = 404, message = "Restaurante ou usuário não encontrado", 
 			response = Problem.class)
 	})
-	public void associar(@ApiParam(value = "ID do restaurante", example = "1", required = true) Long restauranteId, @ApiParam(value = "ID do usuário", example = "1", required = true) Long responsavelId);
+	public ResponseEntity<Void> associar(@ApiParam(value = "ID do restaurante", example = "1", required = true) Long restauranteId, @ApiParam(value = "ID do usuário", example = "1", required = true) Long responsavelId);
 	
 	@ApiOperation("Desassociação de restaurante com usuário responsável")
 	@ApiResponses({
@@ -34,5 +37,5 @@ public interface RestauranteUsuarioResponsavelControllerOpenApi {
 		@ApiResponse(code = 404, message = "Restaurante ou usuário não encontrado", 
 			response = Problem.class)
 	})
-	public void desassociar(@ApiParam(value = "ID do restaurante", example = "1", required = true) Long restauranteId, @ApiParam(value = "ID do usuário", example = "1", required = true) Long responsavelId);
+	public ResponseEntity<Void> desassociar(@ApiParam(value = "ID do restaurante", example = "1", required = true) Long restauranteId, @ApiParam(value = "ID do usuário", example = "1", required = true) Long responsavelId);
 }

@@ -1,6 +1,6 @@
 package com.algaworks.algafood.api.openapi.controller;
 
-import java.util.List;
+import org.springframework.hateoas.CollectionModel;
 
 import com.algaworks.algafood.api.dto.GrupoDTO;
 import com.algaworks.algafood.api.dto.input.GrupoInput;
@@ -16,7 +16,7 @@ import io.swagger.annotations.ApiResponses;
 public interface GrupoControllerOpenApi {
 
 	@ApiOperation("Lista os grupos")
-	public List<GrupoDTO> listar();
+	public CollectionModel<GrupoDTO> listar();
 
 	@ApiOperation("Busca um grupo por ID")
 	@ApiResponses({@ApiResponse(code = 400, message = "ID de um grupo inválido", response = Problem.class), @ApiResponse(code = 404, message = "Grupo não encontrado", response = Problem.class)})
