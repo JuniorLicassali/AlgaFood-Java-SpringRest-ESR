@@ -45,10 +45,6 @@ import com.algaworks.algafood.api.v1.openapi.model.PermissoesDTOOpenApi;
 import com.algaworks.algafood.api.v1.openapi.model.ProdutosDTOOpenApi;
 import com.algaworks.algafood.api.v1.openapi.model.RestauranteBasicoDTOOpenApi;
 import com.algaworks.algafood.api.v1.openapi.model.UsuarioDTOOpenApi;
-import com.algaworks.algafood.api.v2.dto.CidadeDTOV2;
-import com.algaworks.algafood.api.v2.dto.CozinhaDTOV2;
-import com.algaworks.algafood.api.v2.openapi.model.CidadesDTOOpenApiV2;
-import com.algaworks.algafood.api.v2.openapi.model.CozinhasDTOOpenApiV2;
 import com.fasterxml.classmate.TypeResolver;
 
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
@@ -145,40 +141,6 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 							new Tag("Estatísticas", "Estatísticas da AlgaFood"));
 	}
 	
-	@Bean
-	public Docket apiDocketV2() {
-		var typeResolver = new TypeResolver();
-		
-		return new Docket(DocumentationType.SWAGGER_2)
-				.groupName("V2")
-				.select()
-					.apis(RequestHandlerSelectors.basePackage("com.algaworks.algafood.api"))
-					.paths(PathSelectors.ant("/v2/**"))
-					.build()
-				.useDefaultResponseMessages(false)
-				.globalResponseMessage(RequestMethod.GET, globalGetResponseMessages())
-				.globalResponseMessage(RequestMethod.POST, globalPostPutResponseMessages())
-				.globalResponseMessage(RequestMethod.PUT, globalPostPutResponseMessages())
-				.globalResponseMessage(RequestMethod.DELETE, globalDeleteResponseMessages())
-				.additionalModels(typeResolver.resolve(Problem.class))
-				.ignoredParameterTypes(ServletWebRequest.class, URL.class, URI.class,
-						URLStreamHandler.class, Resource.class, File.class, InputStream.class)
-				.directModelSubstitute(Pageable.class, PageableDTOOpenApi.class)
-				.directModelSubstitute(Links.class, LinksDTOOpenApi.class)
-				
-				.alternateTypeRules(AlternateTypeRules.newRule(
-						typeResolver.resolve(PagedModel.class, CozinhaDTOV2.class), 
-						CozinhasDTOOpenApiV2.class))
-				
-				.alternateTypeRules(AlternateTypeRules.newRule(
-						typeResolver.resolve(CollectionModel.class, CidadeDTOV2.class), 
-						CidadesDTOOpenApiV2.class))
-				
-				.apiInfo(apiInfoV2())
-				.tags(new Tag("Cozinhas", "Gerencia as cozinhas"),
-						new Tag("Cidades", "Gerencia as cozinhas"));
-	}
-	
 	private List<ResponseMessage> globalGetResponseMessages() {
 		return Arrays.asList(
 				new ResponseMessageBuilder()
@@ -239,15 +201,6 @@ public class SpringFoxConfig implements WebMvcConfigurer {
 					+ "<strong>Essa versão da API está preciada e deixará de exisitr a partir de 01/01/2021."
 					+ " Use a versão mais atual da API.")
 				.version("1")
-				.contact(new Contact("AlgaWorks", "https://www.algafood.com", "email@gmail.com"))
-				.build();
-	}
-	
-	private ApiInfo apiInfoV2 () {
-		return new ApiInfoBuilder()
-				.title("AlgaFood API")
-				.description("API aberta para clientes e restaurantes")
-				.version("2")
 				.contact(new Contact("AlgaWorks", "https://www.algafood.com", "email@gmail.com"))
 				.build();
 	}
