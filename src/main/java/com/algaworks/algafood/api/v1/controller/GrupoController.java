@@ -23,6 +23,7 @@ import com.algaworks.algafood.api.v1.assembler.GrupoInputDisassembler;
 import com.algaworks.algafood.api.v1.dto.GrupoDTO;
 import com.algaworks.algafood.api.v1.dto.input.GrupoInput;
 import com.algaworks.algafood.api.v1.openapi.controller.GrupoControllerOpenApi;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Grupo;
 import com.algaworks.algafood.domain.repository.GrupoRepository;
 import com.algaworks.algafood.domain.service.CadastroGrupoService;
@@ -43,6 +44,8 @@ public class GrupoController implements GrupoControllerOpenApi {
 	@Autowired
 	private GrupoInputDisassembler grupoInputDisassembler;
 	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
+	@Override
 	@GetMapping
 	public CollectionModel<GrupoDTO> listar() {
 		List<Grupo> todosGrupos = grupoRepository.findAll();
@@ -50,6 +53,8 @@ public class GrupoController implements GrupoControllerOpenApi {
 		return grupoDTOAssembler.toCollectionModel(todosGrupos);
 	}
 	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
+	@Override
 	@GetMapping("/{grupoId}")
 	public GrupoDTO buscar(@PathVariable Long grupoId) {
 		Grupo grupo = grupoService.buscarOuFalhar(grupoId);
@@ -57,6 +62,8 @@ public class GrupoController implements GrupoControllerOpenApi {
 		return grupoDTOAssembler.toModel(grupo);
 	}
 	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
+	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public GrupoDTO adicionar(@RequestBody @Valid GrupoInput grupoInput) {
@@ -67,6 +74,8 @@ public class GrupoController implements GrupoControllerOpenApi {
 		return grupoDTOAssembler.toModel(grupo);
 	}
 	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
+	@Override
 	@PutMapping("/{grupoId}")
 	public GrupoDTO atualizar(@PathVariable Long grupoId, @RequestBody @Valid GrupoInput grupoInput) {
 		
@@ -77,6 +86,8 @@ public class GrupoController implements GrupoControllerOpenApi {
 		return grupoDTOAssembler.toModel(grupoAtual);
 	}
 	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeEditar
+	@Override
 	@DeleteMapping("/{grupoId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void excluir(@PathVariable Long grupoId) {

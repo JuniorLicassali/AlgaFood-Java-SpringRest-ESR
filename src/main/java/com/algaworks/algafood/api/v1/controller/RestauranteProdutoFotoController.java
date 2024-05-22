@@ -1,7 +1,6 @@
 package com.algaworks.algafood.api.v1.controller;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -27,6 +26,7 @@ import com.algaworks.algafood.api.v1.assembler.FotoProdutoDTOAssembler;
 import com.algaworks.algafood.api.v1.dto.FotoProdutoDTO;
 import com.algaworks.algafood.api.v1.dto.input.FotoProdutoInput;
 import com.algaworks.algafood.api.v1.openapi.controller.RestauranteProdutoFotoControllerOpenApi;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.FotoProduto;
 import com.algaworks.algafood.domain.model.Produto;
@@ -52,6 +52,8 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
 	@Autowired
 	private FotoProdutoDTOAssembler fotoProdutoDTOAssembler;
 
+	@CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
+	@Override
 	@PutMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
 	public FotoProdutoDTO atualizarFoto(@PathVariable Long restauranteId,
 			@PathVariable Long produtoId, @Valid FotoProdutoInput fotoProdutoInput, @RequestPart(required = true) MultipartFile arquivo) throws IOException {
@@ -72,18 +74,24 @@ public class RestauranteProdutoFotoController implements RestauranteProdutoFotoC
 		return fotoProdutoDTOAssembler.toModel(fotoSalva);
 	}
 	
+	@CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
+	@Override
 	@DeleteMapping
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void excluir(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
 		catalogoFotoProduto.excluir(restauranteId, produtoId);
 	}
 	
+	@CheckSecurity.Restaurantes.PodeConsultar
+	@Override
 	@GetMapping
 	public FotoProdutoDTO buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
 		FotoProduto fotoProduto = catalogoFotoProduto.buscarOuFalhar(restauranteId, produtoId);
 		return fotoProdutoDTOAssembler.toModel(fotoProduto);
 	}
 	
+	// As fotos dos produtos ficarão públicas (não precisa de autorização para acessá-las)
+	@Override
 	@GetMapping(produces = MediaType.ALL_VALUE)
 	public ResponseEntity<?> servirFoto(@PathVariable Long restauranteId, 
 			@PathVariable Long produtoId, @RequestHeader(name = "accept") String acceptHeader) throws HttpMediaTypeNotAcceptableException {

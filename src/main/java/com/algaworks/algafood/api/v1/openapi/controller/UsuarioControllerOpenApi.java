@@ -33,7 +33,7 @@ public interface UsuarioControllerOpenApi {
 	@ApiResponses({
 		@ApiResponse(code = 201, message = "Usuário cadastrado"),
 	})
-	public UsuarioDTO salvar(@ApiParam(name = "corpo", value = "Representação de um novo usuário", required = true) UsuarioComSenhaInput usuarioInput);
+	public UsuarioDTO adicionar(@ApiParam(name = "corpo", value = "Representação de um novo usuário", required = true) UsuarioComSenhaInput usuarioInput);
 	
 	@ApiOperation("Atualiza um usuário por ID")
 	@ApiResponses({

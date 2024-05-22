@@ -24,6 +24,7 @@ import com.algaworks.algafood.api.v1.assembler.ProdutoInputDisassembler;
 import com.algaworks.algafood.api.v1.dto.ProdutoDTO;
 import com.algaworks.algafood.api.v1.dto.input.ProdutoInput;
 import com.algaworks.algafood.api.v1.openapi.controller.RestauranteProdutoControllerOpenApi;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Produto;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.repository.ProdutoRepository;
@@ -52,6 +53,8 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 	@Autowired
 	private AlgaLinks algaLinks;
 	
+	@CheckSecurity.Restaurantes.PodeConsultar
+	@Override
 	@GetMapping
 	public CollectionModel<ProdutoDTO> listar(@PathVariable Long restauranteId, @RequestParam(required = false,  defaultValue = "false") Boolean incluirInativos) {
 		Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
@@ -68,6 +71,8 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 				.add(algaLinks.linkToProdutos(restauranteId));
 	}
 	
+	@CheckSecurity.Restaurantes.PodeConsultar
+	@Override
 	@GetMapping("/{produtoId}")
 	public ProdutoDTO buscar(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
 		Produto produto = cadastroProdutoService.buscarOuFalhar(restauranteId, produtoId);
@@ -75,6 +80,8 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 		return produtoDTOAssembler.toModel(produto);
 	}
 	
+	@CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
+	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public ProdutoDTO adicionar(@PathVariable Long restauranteId, @RequestBody @Valid ProdutoInput produtoInput) {
@@ -89,6 +96,8 @@ public class RestauranteProdutoController implements RestauranteProdutoControlle
 		return produtoDTOAssembler.toModel(produto);
 	}
 	
+	@CheckSecurity.Restaurantes.PodeGerenciarFuncionamento
+	@Override
 	@PutMapping("/{produtoId}")
 	public ProdutoDTO atualizar(@PathVariable Long restauranteId, @PathVariable Long produtoId, @RequestBody @Valid ProdutoInput produtoInput) {
 		

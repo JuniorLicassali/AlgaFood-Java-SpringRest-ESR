@@ -17,6 +17,7 @@ import com.algaworks.algafood.api.v1.AlgaLinks;
 import com.algaworks.algafood.api.v1.assembler.UsuarioDTOAssembler;
 import com.algaworks.algafood.api.v1.dto.UsuarioDTO;
 import com.algaworks.algafood.api.v1.openapi.controller.RestauranteUsuarioResponsavelControllerOpenApi;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Restaurante;
 import com.algaworks.algafood.domain.service.CadastroRestauranteService;
 
@@ -33,6 +34,7 @@ public class RestauranteUsuarioResponsavelController implements RestauranteUsuar
 	@Autowired
 	private AlgaLinks algaLinks;
 
+	@CheckSecurity.Restaurantes.PodeGerenciarCadastro
 	@Override
 	@GetMapping
 	public CollectionModel<UsuarioDTO> listar(@PathVariable Long restauranteId) {
@@ -43,13 +45,15 @@ public class RestauranteUsuarioResponsavelController implements RestauranteUsuar
 				.add(algaLinks.linkToResponsaveisRestaurante(restauranteId))
 				.add(algaLinks.linkToResponsaveisRestauranteAssociacao(restauranteId, "associar"));
 		
-		usuariosDTO.getContent().forEach(usuarioDTO -> {
+		usuariosDTO.getContent().stream().forEach(usuarioDTO -> {
 			usuarioDTO.add(algaLinks.linkToResponsaveisRestauranteDesassociacao(restauranteId, usuarioDTO.getId(), "rel"));
 		});
 		
 		return usuariosDTO;
 	}
 	
+	@CheckSecurity.Restaurantes.PodeGerenciarCadastro
+	@Override
 	@PutMapping("/{responsavelId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public ResponseEntity<Void> associar(@PathVariable Long restauranteId, @PathVariable Long responsavelId) {
@@ -58,6 +62,8 @@ public class RestauranteUsuarioResponsavelController implements RestauranteUsuar
 		return ResponseEntity.noContent().build();
 	}
 	
+	@CheckSecurity.Restaurantes.PodeGerenciarCadastro
+	@Override
 	@DeleteMapping("/{responsavelId}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public ResponseEntity<Void> desassociar(@PathVariable Long restauranteId, @PathVariable Long responsavelId) {

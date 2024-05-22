@@ -24,6 +24,7 @@ import com.algaworks.algafood.api.v1.dto.input.SenhaInput;
 import com.algaworks.algafood.api.v1.dto.input.UsuarioComSenhaInput;
 import com.algaworks.algafood.api.v1.dto.input.UsuarioInput;
 import com.algaworks.algafood.api.v1.openapi.controller.UsuarioControllerOpenApi;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import com.algaworks.algafood.domain.model.Usuario;
 import com.algaworks.algafood.domain.repository.UsuarioRepository;
 import com.algaworks.algafood.domain.service.CadastroUsuarioService;
@@ -44,6 +45,8 @@ public class UsuarioController implements UsuarioControllerOpenApi {
 	@Autowired
 	private UsuarioInputDisassembler usuarioInputDisassembler;
 	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
+	@Override
 	@GetMapping
 	public CollectionModel<UsuarioDTO> listar() {
 		
@@ -52,15 +55,18 @@ public class UsuarioController implements UsuarioControllerOpenApi {
 		return usuarioDTOAssembler.toCollectionModel(todosUsuarios);
 	}
 	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeConsultar
+	@Override
 	@GetMapping("/{usuarioId}")
 	public UsuarioDTO buscar(@PathVariable Long usuarioId) {
 		Usuario usuario = usuarioService.buscarOuFalhar(usuarioId);
 		return usuarioDTOAssembler.toModel(usuario);
 	}
 	
+	@Override
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public UsuarioDTO salvar(@RequestBody @Valid UsuarioComSenhaInput usuarioInput) {
+	public UsuarioDTO adicionar(@RequestBody @Valid UsuarioComSenhaInput usuarioInput) {
 		Usuario usuario = usuarioInputDisassembler.toDomainObject(usuarioInput);
 		usuario = usuarioService.salvar(usuario);
 		
@@ -68,6 +74,8 @@ public class UsuarioController implements UsuarioControllerOpenApi {
 		
 	}
 	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeAlterarUsuario
+	@Override
 	@PutMapping("/{usuarioId}")
 	public UsuarioDTO atualizar(@PathVariable Long usuarioId, @RequestBody @Valid UsuarioInput usuarioInput) {
 		
@@ -78,6 +86,8 @@ public class UsuarioController implements UsuarioControllerOpenApi {
 		return usuarioDTOAssembler.toModel(usuarioAtual);
 	}
 	
+	@CheckSecurity.UsuariosGruposPermissoes.PodeAlterarPropriaSenha
+	@Override
 	@PutMapping("/{usuarioId}/senha")
 	public void alterarSenha(@PathVariable Long usuarioId, @RequestBody @Valid SenhaInput senha) {
 		usuarioService.alterarSenha(usuarioId, senha.getSenhaAtual(), senha.getNovaSenha());
